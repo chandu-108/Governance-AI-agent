@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: governance-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: governance_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: governance-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  opa:
+    image: openpolicyagent/opa:latest
+    container_name: governance-opa
+    command: [ "run", "--server", "--addr=0.0.0.0:8181" ]
+    ports:
+      - "8181:8181"
+
+volumes:
+  postgres_data:
